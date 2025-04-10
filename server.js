@@ -35,8 +35,10 @@ function sanitizeName(name) {
 }
 
 function getUpdatedData(roomId) {
+  const isVisible = visibility[roomId];
+
   return {
-    room: getRoomWithoutVotes(rooms[roomId]),
+    room: isVisible ? rooms[roomId] : getRoomWithoutVotes(rooms[roomId]),
     admin: admins[roomId],
     deck: decks[roomId],
     isVisible: visibility[roomId],
