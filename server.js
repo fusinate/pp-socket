@@ -36,11 +36,27 @@ function sanitizeName(name) {
 
 function getUpdatedData(roomId) {
   return {
-    room: rooms[roomId],
+    room: getRoomWithoutVotes(rooms[roomId]),
     admin: admins[roomId],
     deck: decks[roomId],
     isVisible: visibility[roomId],
   };
+}
+
+function getRoomWithoutVotes(room) {
+  const cleanRoom = {};
+
+  for (const userId in room) {
+    cleanRoom[userId] = {
+      ...room[userId],
+      vote:
+        room[userId].vote !== undefined && room[userId].vote !== null
+          ? "*"
+          : room[userId].vote,
+    };
+  }
+
+  return cleanRoom;
 }
 
 io.on("connection", (socket) => {
