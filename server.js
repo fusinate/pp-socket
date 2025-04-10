@@ -4,8 +4,22 @@ import { Server } from "socket.io";
 
 const app = express();
 const server = http.createServer(app);
-// TODO: restrict
-const io = new Server(server, { cors: { origin: "*" } });
+
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => {
+      const allowed = ["https://skyfallplanning.pages.dev"];
+
+      if (!origin || allowed.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS!"));
+      }
+    },
+    methods: ["GET"],
+  },
+});
+
 const PORT = process.env.PORT || 4000;
 let rooms = {};
 let admins = {};
